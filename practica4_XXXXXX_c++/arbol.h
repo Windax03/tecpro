@@ -12,7 +12,6 @@
 #include <sstream>
 #include <list>
 #include <memory>
-#include <cstring>
 
 
 using namespace std;

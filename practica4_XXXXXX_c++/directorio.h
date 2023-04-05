@@ -73,12 +73,6 @@ class Directorio : public Arbol {
             directorio.push_back(comp);
         }
 
-        //Función que borra una componente al directorio
-        void borrarComp(shared_ptr<Arbol> comp){
-            directorio.remove(comp);
-        }
-
-
         
 
 };
