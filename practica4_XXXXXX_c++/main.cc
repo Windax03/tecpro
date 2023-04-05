@@ -81,11 +81,10 @@ int main()
 				cerr << "Error sintactico: comando desconocido" << endl;
 			}
 		}
-		/*
 		catch (const arbol_ficheros_error& e)
 		{
 			cerr << e.what() << endl;
-		}*/
+		}
 		catch (const out_of_range& e)
 		{
 			cerr << "Error sintactico: parametros insuficientes" << endl;

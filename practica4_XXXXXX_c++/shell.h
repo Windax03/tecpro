@@ -10,6 +10,8 @@
 #include "fichero.h"
 #include "directorio.h"
 #include "enlace.h"
+#include "Ex_noEsDirec.h"
+#include "Ex_noExistComp.h"
 
 class Shell{
 
@@ -124,15 +126,33 @@ class Shell{
                 else{   //En los demás casos se indica un directorio especifico para avanzar a él.
 
                     //Se busca el directorio con el nombre que se indica en path
-                    shared_ptr<Arbol> dir = ruta.back()->EncontrarComp(path);
+                    shared_ptr<Arbol> direc = ruta.back()->EncontrarComp(path);
 
-                    //Se avanza al directorio especificado.
-                    ruta.push_back(dynamic_pointer_cast<Directorio>(dir));
-                    
+                    if( direc == nullptr ){     // Si no existe el objeto mostramos error
+
+                        throw Ex_noExisteComp();
+                    }
+                    // Se comprueba si es un enlace
+                    if(dynamic_pointer_cast<Enlace>(direc) != nullptr){             // En caso positivo se usa el enlace simbolico para ir a la ruta especifica
+                        
+                        shared_ptr<Enlace> link =  dynamic_pointer_cast<Enlace>(direc);
+                        
+                        //Se avanza al directorio especificado.
+                        ruta.push_back(dynamic_pointer_cast<Directorio>(link->enlace));
+
+                    }
+                    else if(dynamic_pointer_cast<Fichero>(direc) != nullptr)  // Si es un fichero mostramos un error
+                    {   
+
+                        throw Ex_noEsDirec();
+                    }
+                    // Si no es un enlace se dirige al path indicado
+                    else{
+                        ruta.push_back(dynamic_pointer_cast<Directorio>(direc));
+
+                    }
                 }
-                
             }
-
         }
 
         void ln(string path, string name){              //-------------------------------------
@@ -142,7 +162,7 @@ class Shell{
             if(path == "."){  // Si el path es un punto, creamos un enlace con el directorio actual
 
                 shared_ptr<Enlace> ln = make_shared<Enlace>(name, dynamic_pointer_cast<Arbol>(ruta.back()));
-                ruta.back()->ayadirComp(ln);
+                ruta.back()->ayadirComp(ln); 
             }
             else if(path == ".."){  // Si el path es "..", creamos un enlace con el directorio anterior a este
                 
@@ -189,6 +209,9 @@ class Shell{
                         shared_ptr<Enlace> ln = make_shared<Enlace>(name,comp); // Se crea un enlace de un enlace
                         ruta.back()->ayadirComp(ln);
                     }
+                    else{
+                        throw Ex_noExisteComp();
+                    }
                 }
             }
         }
@@ -223,6 +246,10 @@ class Shell{
             //Se selecciona la componente de la que se quiere obtener el tamaño
             componente = ruta.back()->EncontrarComp(comp);
 
+            //Si no existe la componente
+            if(componente == nullptr){
+                throw Ex_noExisteComp();
+            }
             //Volvemos a la ruta inicial
             cd (rutaActual);
 
@@ -259,6 +286,9 @@ class Shell{
                     shared_ptr<Directorio> direc = dynamic_pointer_cast<Directorio>(comp);
                     ruta.back()->borrarComp(direc);
                 }
+            }
+            else{   
+                throw Ex_noExisteComp();        //Si no existe la componente
             }
             cd(rutaActual);
             

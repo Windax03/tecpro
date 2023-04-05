@@ -1,0 +1,22 @@
+//------------------------------------------------------------------------------
+// File:   Ex_noEsDirec.h
+// Authors: Jorge Leris - 845647 / Angel Villanueva - 844759
+// Date:   abril 2023
+// Coms:    Fichero que almacena la clase que gestiona las excepciones
+//          Práctica 4 de TecPro
+//------------------------------------------------------------------------------
+
+#pragma once
+
+#include "arbol_ficheros_error.h"
+
+
+class Ex_noEsDirec : public arbol_ficheros_error{
+
+    public:
+
+        const char* what() const throw()override {
+            return "No es un directorio";
+        }
+
+};

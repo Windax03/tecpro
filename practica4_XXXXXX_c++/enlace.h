@@ -11,11 +11,10 @@
 
 class Enlace : public Arbol{
 
-    protected:
-
-        shared_ptr<Arbol> enlace;
-
     public:
+    
+        //El enlace esta en publico para que el shell pueda acceder a el y determinar el directorio que enlaza.
+        shared_ptr<Arbol> enlace;
 
         //Constructor
         Enlace(string n, shared_ptr<Arbol> e) : Arbol(n), enlace(e) {}
