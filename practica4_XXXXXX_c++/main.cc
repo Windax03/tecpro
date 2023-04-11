@@ -52,14 +52,14 @@ int main()
 			{
 				cout << sh.du();
 			}
-			/*else if (cmd[0]=="mkdir")
+			else if (cmd[0]=="mkdir")
 			{
 				sh.mkdir(cmd.at(1));
-			}*/
+			}
 			else if (cmd[0]=="vi")
 			{
 				sh.vi(cmd.at(1),stoi(cmd.at(2)));
-			}/*
+			}
 			else if (cmd[0]=="stat")
 			{
 				cout << sh.stat(cmd.at(1)) << endl;
@@ -79,13 +79,12 @@ int main()
 			else
 			{
 				cerr << "Error sintactico: comando desconocido" << endl;
-			}*/
+			}
 		}
-		/*
 		catch (const arbol_ficheros_error& e)
 		{
 			cerr << e.what() << endl;
-		}*/
+		}
 		catch (const out_of_range& e)
 		{
 			cerr << "Error sintactico: parametros insuficientes" << endl;
