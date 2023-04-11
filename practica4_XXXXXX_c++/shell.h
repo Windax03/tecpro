@@ -12,6 +12,8 @@
 #include "enlace.h"
 #include "Ex_noEsDirec.h"
 #include "Ex_noExistComp.h"
+#include "Ex_compExistente.h"
+#include "Ex_yaDirec.h"
 
 class Shell{
 
@@ -54,10 +56,10 @@ class Shell{
             return ruta.back()->listRec();
         }
 
-        void vi(string name, int size){             //excepcion nombre ya existente (e)
+        void vi(string name, int size){             //excepcion nombre ya existente (en vi ficheros si se puede, pero directorios no)
 
             shared_ptr<Arbol> comp = ruta.back()->EncontrarComp(name);
-
+            
             //Si el fichero no existe se crea
             if(comp == nullptr){
                 shared_ptr<Fichero> archivo = make_shared<Fichero>(name,size);
@@ -67,11 +69,16 @@ class Shell{
 
 
                 // Si el archivo existe se itera hasta llegar al ultimo enlace.
-                while(dynamic_pointer_cast<Enlace>(comp) != nullptr){               //----------------------
+                while(dynamic_pointer_cast<Enlace>(comp) != nullptr){              
                     
                     shared_ptr<Enlace> ptr =  dynamic_pointer_cast<Enlace>(comp);
                     //excepcion si el enlace apunta a un directorio
                     comp = ptr->enl();
+                }
+
+                //Si es un directorio vi no puede modificarlo
+                if(dynamic_pointer_cast<Directorio>(comp) != nullptr){
+                    throw Ex_yaDirec();
                 }
 
                 //Se comprueba que sea un fichero
@@ -83,17 +90,42 @@ class Shell{
             }
         }
 
-        void mkdir(string name){
+        void mkdir(string name){    
 
-            //Se crea el directorio deseado
-            shared_ptr<Directorio> direc = make_shared<Directorio>(name);
-            //Se añade en la ubicación indicada
-            ruta.back()->ayadirComp(direc);
+            string rutaActual = pwd(); //Se extrae la ruta actual
+
+            char *comp = strtok((char *)name.c_str(),"/");
+            while(comp != nullptr){
+                
+                char *aux = comp;
+
+                comp = strtok(nullptr, "/");
+                // Se itera hasta encontrar el ultimo elemento, donde añadiremos un directorio
+                if(comp == nullptr){
+
+                    //Se comprueba si existe un archivo con el mismo nombre
+                    if(ruta.back()->EncontrarComp(aux) != nullptr){
+                        throw Ex_compExistente();
+                    }
+                    else{
+                        //Se crea el directorio deseado
+                        shared_ptr<Directorio> direc = make_shared<Directorio>(aux);
+                        //Se añade en la ubicación indicada
+                        ruta.back()->ayadirComp(direc);
+                    }
+                    
+                }
+                else{
+                    cd(aux);    //En el caso de que se indique una ruta se avanza hasta el final
+                }
+            }
+        
+            cd(rutaActual); //Se vuelve a la ruta inicial
         }
 
         void cd(string path){
 
-            string rutaActual = pwd();
+            string rutaActual = pwd();  //Se extrae la ruta actual
 
             //En el caso que el path sea "/" se va al directorio raiz
             if (path[0] == '/'){
@@ -102,15 +134,15 @@ class Shell{
                 ruta.clear();                                 // Limpiamos toda la dirección
                 ruta.push_back(raiz);                         // Añadimos el directorio raiz a la ruta
             }
-
+            
             char *comp = strtok((char *)path.c_str(),"/");
 
             while(comp != nullptr){
                 
                 //En el caso que el path sea "." se queda en la ruta actual.
-                if (path != "."){
+                if (strcmp(comp, ".") != 0){
                     
-                    if (path == ".."){          //En el caso que el path sea ".." se retrocede un directorio
+                    if (strcmp(comp, "..") == 0){          //En el caso que el path sea ".." se retrocede un directorio
                         
                         //Si nos encontramos en un directorio que no es el raiz, se retrocede uno.
                         if (ruta.size() > 1){
@@ -154,8 +186,13 @@ class Shell{
 
         void ln(string path, string name){              //-------------------------------------
 
-            string rutaActual = pwd();          //Se extrae la ruta actual
 
+            string rutaActual = pwd();          //Se extrae la ruta actual
+            
+            if(ruta.back()->EncontrarComp(name) != nullptr){  //Si la componente ya existe abortamos ejecucción de ln.
+                throw Ex_compExistente();
+            }
+            
             if(path == "."){  // Si el path es un punto, creamos un enlace con el directorio actual
 
                 shared_ptr<Enlace> ln = make_shared<Enlace>(name, dynamic_pointer_cast<Arbol>(ruta.back()));
@@ -255,7 +292,6 @@ class Shell{
                 throw Ex_noExisteComp();
             }
             
-
             //Se devuelve el tamaño de la componente deseada
             return componente->tamagno();
 

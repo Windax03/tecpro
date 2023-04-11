@@ -2,8 +2,7 @@
 // File:   Ex_noExistComp.h
 // Authors: Jorge Leris - 845647 / Angel Villanueva - 844759
 // Date:   abril 2023
-// Coms:    Fichero que almacena la clase que gestiona las excepciones
-//          Práctica 4 de TecPro
+// Coms:    Práctica 4 de TecPro  
 //------------------------------------------------------------------------------
 
 #pragma once
