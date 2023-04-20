@@ -1,0 +1,63 @@
+** https://www.haskell.org/
+  	tutorial online de 5 minutos 
+  	mucha documentacion, videos, y recursos...
+		https://www.haskell.org/documentation/
+  		   Learn You a Haskell for Great Good!
+			http://learnyouahaskell.com/chapters
+		   ¡Aprende Haskell por el bien de todos!
+			http://aprendehaskell.es/main.html
+
+** https://en.wikibooks.org/wiki/Haskell
+   Descargable en pdf, etc...
+   - Beginner's Track -> Haskell Basics ->Getting set up...
+   ** Indentation (o relativo al Layout): (en la seccion de Beginner's Track-> Intermediate Haskell)
+	 https://en.wikibooks.org/wiki/Haskell/Indentation  
+   * Haskell/Syntactic sugar (en la seccion de apendices)
+	 https://en.wikibooks.org/wiki/Haskell/Syntactic_sugar
+
+  https://wiki.haskell.org/Meta-tutorial
+	** Learn Haskell in 10 minutes:  
+		https://wiki.haskell.org/Learn_Haskell_in_10_minutes
+  
+
+Hoogle is a Haskell API search engine...
+	https://hoogle.haskell.org/
+
+Resumen funciones predefinidas Haskell:
+	https://www.cs.us.es/cursos/i1m-2022/resumen_Haskell.pdf  (4 paginas) 
+	http://www.cs.us.es/cursos/pd/ejercicios/resumen_Haskell.pdf  (2 paginas)
+Resumen sintaxis, etc... de Haskell:
+	https://jutge.org/doc/haskell-cheat-sheet.pdf (14 paginas)
+
+    A simplified Haskell prelude for teaching:
+	https://hackage.haskell.org/package/simpleprelude-1.0.1.3/docs/Prelude.html
+    Versiones no simplificadas...:
+      https://en.wikibooks.org/wiki/Haskell/Libraries#Haddock_Documentation
+	https://www.haskell.org/onlinereport/haskell2010/  	 (Haskell 2010)
+	(Haskell 98):
+        https://www.haskell.org/onlinereport/standard-prelude.html
+	Haskell 98 Language and Libraries - The Revised Report - December 2002
+	   https://www.haskell.org/onlinereport/    
+	http://zvon.org/other/haskell/Outputprelude/index.html
+	https://www.haskell.org/onlinereport/standard-prelude.html
+
+
+URLs para probar Haskell  ONLINE:
+	https://tryhaskell.org/
+        https://play.haskell.org/
+	https://replit.com/languages/haskell
+	   creo que este no deja definir tus propias estructuras de datos....
+
+
+
+
+tplot :: Turtle -> String -> [Position]
+tplot turtle [] = [getPos turtle]
+tplot turtle (x:xs)
+  | x == '>'  = getPos turtle : tplot (forward turtle) xs
+  | x == '+'  = tplot (turnRight turtle) xs
+  | x == '-'  = tplot (turnLeft turtle) xs
+  | otherwise = tplot turtle xs
+  where getPos (_, _, pos, _) = pos
+
+
